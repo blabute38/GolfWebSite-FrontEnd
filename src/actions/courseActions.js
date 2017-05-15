@@ -2,6 +2,8 @@ import * as types from '../constants/actionTypes';
 import courseApi from '../api/mockCourseApi';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import {createLocationSuccess, loadLocationsSuccess, updateLocationSuccess} from './locationActions';
+import CourseSchema from '../schemas/courseSchema';
+import {normalize} from 'normalizr';
 
 export function loadCoursesSuccess(courses) {
   return {type: types.LOAD_COURSES_SUCCESS, courses: courses};
@@ -15,22 +17,11 @@ export function updateCourseSuccess(course) {
   return {type: types.UPDATE_COURSE_SUCCESS, course: course};
 }
 
-import {normalize, schema} from 'normalizr';
-
-// Define a location
-const location = new schema.Entity('locations');
-
-// Define your course
-const course = new schema.Entity('courses', {location: location});
-
-// Define the schema
-const mySchema = [course];
-
 export function loadCourses() {
   return function(dispatch) {
     dispatch(beginAjaxCall());
     return courseApi.getAllCourses().then(courses => {
-      const normalizedData = normalize(courses, mySchema);
+      const normalizedData = normalize(courses, CourseSchema);
       dispatch(loadCoursesSuccess(normalizedData.entities.courses));
       dispatch(loadLocationsSuccess(normalizedData.entities.locations));
     }).catch(error => {});

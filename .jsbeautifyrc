@@ -1,0 +1,13 @@
+{
+  "js": {
+    "brace_style": "collapse,preserve-inline",
+    "jslint_happy": true,
+    "max_preserve_newlines": 2,
+    "preserve_newlines": true,
+    "preserve_ternary_lines": true,
+    "wrap_line_length": 100
+  },
+  "jsx": {
+
+  }
+}

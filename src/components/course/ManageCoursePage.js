@@ -3,17 +3,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import * as locationActions from '../../actions/locationActions';
-import CourseForm from './CourseForm';
+import EditCourseForm from './EditCourseForm';
 import toastr from 'toastr';
-import {coursesArraySelector} from '../../selectors/courseSelectors';
-import {locationsArraySelector} from '../../selectors/locationSelectors';
 
 export class ManageCoursePage extends React.Component {
 
   constructor(props, context) {
     super(props, context);
 
-    debugger;
     this.state = {
       course: Object.assign({}, props.course),
       location: Object.assign({}, props.location),
@@ -80,9 +77,7 @@ export class ManageCoursePage extends React.Component {
   }
 
   render() {
-    var test = this.props;
-    debugger;
-    return (<CourseForm
+    return (<EditCourseForm
       onChange={this.updateCourseState}
       onSave={this.saveCourse}
       course={this.state.course}
@@ -103,53 +98,17 @@ ManageCoursePage.contextTypes = {
   router: PropTypes.object
 };
 
-function getCourseById(courses, id) {
-  const course = courses.filter(course => course.id == id);
-
-  if (course.length) {
-    return course[0];
-  }
-
-  return null;
-}
-
-function getLocationById(locations, id) {
-
-  const location = locations.filter(location => location.id == id);
-
-  if (location.length) {
-    return location[0];
-  }
-
-  return null;
-}
-
 function mapStateToProps(state, ownProps) {
 
   const courseId = ownProps.params.id;
-  const courses = coursesArraySelector(state);
-  const locations = locationsArraySelector(state);
-
-  let course = {
-    id: '',
-    name: '',
-    websiteHref: '',
-    par: '',
-    numOfHoles: ''
-  };
-  let location = {
-    address: '',
-    city: '',
-    province: '',
-    postalCode: '',
-    country: ''
-  };
-
-  if (courseId && courses.length > 0) {
-    course = getCourseById(courses, courseId);
-    location = getLocationById(locations, course.location);
-  }
-  debugger;
+  const {
+    entities: {
+      courses,
+      locations
+    }
+  } = state;
+  const course = courses[courseId] || {};
+  const location = locations[course.location] || {};
 
   return {course: course, location: location};
 }

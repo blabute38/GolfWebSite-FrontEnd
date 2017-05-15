@@ -2,10 +2,12 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
-import * as locationActions from '../../actions/locationActions';
 import CourseList from './CourseList';
+import PageHeader from '../common/PageHeader';
 import {browserHistory} from 'react-router';
 import {coursesArraySelector} from '../../selectors/courseSelectors';
+import {locationsSelector} from '../../selectors/locationSelectors';
+import Button from '../common/Button';
 
 class CoursesPage extends React.Component {
 
@@ -24,37 +26,32 @@ class CoursesPage extends React.Component {
   }
 
   render() {
-    let {courses} = this.props;
+    let {courses, locations} = this.props;
 
     return (
       <div>
-        <h1>Courses</h1>
-        <input
-          type="submit"
-          value="Add Course"
-          className="btn btn-primary"
-          onClick={this.redirectToAddCoursePage}/>
-        <CourseList courses={courses}/>
+        <PageHeader title="Courses"/>
+        <Button value="Add Course" onClick={this.redirectToAddCoursePage}/>
+        <CourseList courses={courses} locations={locations}/>
       </div>
     );
   }
 }
 
 CoursesPage.propTypes = {
-  courses: PropTypes.object.isRequired,
+  courses: PropTypes.array.isRequired,
+  locations: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
-
-  return {courses: coursesArraySelector(state)};
+  return {courses: coursesArraySelector(state), locations: locationsSelector(state)};
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-      ...courseActions,
-      ...locationActions
+      ...courseActions
     }, dispatch)
   };
 }

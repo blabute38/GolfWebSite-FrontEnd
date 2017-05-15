@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import CourseListRow from './CourseListRow';
 
-const CourseList = ({courses}) => {
+const CourseList = ({courses, locations}) => {
 
   return (
     <table className="table">
@@ -15,16 +15,15 @@ const CourseList = ({courses}) => {
         </tr>
       </thead>
       <tbody>
-        {courses.map(course => <CourseListRow key={course.id} course={course}/>)}
+        {courses.map(course => <CourseListRow key={course.id} course={course} location={locations[course.location] || {}}/>)}
       </tbody>
     </table>
   );
 }
-// {Object.keys(courses).reduce(course => <CourseListRow key={course.id} course={course}/>)}
-// {courses.map(course => <CourseListRow key={course.id} course={course}/>)}
 
 CourseList.propTypes = {
-  courses: PropTypes.object.isRequired
+  courses: PropTypes.array.isRequired,
+  locations: PropTypes.object.isRequired
 };
 
 export default CourseList;
