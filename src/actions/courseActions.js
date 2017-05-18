@@ -1,5 +1,6 @@
 import * as types from '../constants/actionTypes';
 import courseApi from '../api/mockCourseApi';
+import locationApi from '../api/mockLocationApi';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import {createLocationSuccess, loadLocationsSuccess, updateLocationSuccess} from './locationActions';
 import CourseSchema from '../schemas/courseSchema';
@@ -22,8 +23,18 @@ export function loadCourses() {
     dispatch(beginAjaxCall());
     return courseApi.getAllCourses().then(courses => {
       const normalizedData = normalize(courses, CourseSchema);
+
+      return normalizedData;
+      // dispatch(loadCoursesSuccess(normalizedData.entities.courses));
+      // dispatch(loadLocationsSuccess(normalizedData.entities.locations));
+    }).then(normalizedData => {
       dispatch(loadCoursesSuccess(normalizedData.entities.courses));
+
+      return normalizedData;
+    }).then(normalizedData => {
       dispatch(loadLocationsSuccess(normalizedData.entities.locations));
+
+      return normalizedData;
     }).catch(error => {});
   };
 }
@@ -34,10 +45,10 @@ export function saveCourse(course) {
     return courseApi.saveCourse(course).then(course => {
       if (course.id) {
         dispatch(updateCourseSuccess(course));
-        dispatch(updateLocationSuccess(course));
+        // dispatch(updateLocationSuccess(course));
       } else {
         dispatch(createCourseSuccess(course));
-        dispatch(createLocationSuccess(course));
+        // dispatch(createLocationSuccess(course));
       }
     }).catch(error => {
       dispatch(ajaxCallError());

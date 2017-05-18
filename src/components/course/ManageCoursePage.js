@@ -19,11 +19,12 @@ export class ManageCoursePage extends React.Component {
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
+    this.updateLocationState = this.updateLocationState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-
+  componentWillReceiveProps(nextProps, nextState) {
+    debugger;
     if (this.props.course.id != nextProps.course.id) {
       // necesary to populate form when existing course is loaded directly
       this.setState({course: Object.assign({}, nextProps.course)});
@@ -34,12 +35,19 @@ export class ManageCoursePage extends React.Component {
   updateCourseState(event) {
     const field = event.target.name;
     let course = this.state.course;
-    let location = this.state.location;
 
     course[field] = event.target.value;
+
+    return this.setState({course: course});
+  }
+
+  updateLocationState(event) {
+    const field = event.target.name;
+    let location = this.state.location;
+
     location[field] = event.target.value;
 
-    return this.setState({course: course, location: location});
+    return this.setState({location: location});
   }
 
   courseFormIsValid() {
@@ -63,8 +71,20 @@ export class ManageCoursePage extends React.Component {
       return;
     }
 
+    // this.setState({saving: true}); this.props.actions.saveCourse(this.state.course).then(() =>
+    // this.props.actions.saveLocation(this.state.location)).then(() => this.redirect()).catch(error =>
+    // {   toastr.error(error);   this.setState({saving: false}); });
+
     this.setState({saving: true});
-    this.props.actions.saveCourse(this.state.course).then(() => this.redirect()).catch(error => {
+    this.props.actions.saveLocation(this.state.location).then((locationId) => {
+      this.setState({
+        course: {
+          ...this.state.course,
+          location: locationId
+        }
+      })
+      this.props.actions.saveCourse(this.state.course);
+    }).then(() => this.redirect()).catch(error => {
       toastr.error(error);
       this.setState({saving: false});
     });
@@ -78,7 +98,8 @@ export class ManageCoursePage extends React.Component {
 
   render() {
     return (<EditCourseForm
-      onChange={this.updateCourseState}
+      onCourseChange={this.updateCourseState}
+      onLocationChange={this.updateLocationState}
       onSave={this.saveCourse}
       course={this.state.course}
       location={this.state.location}
