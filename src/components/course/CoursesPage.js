@@ -7,6 +7,7 @@ import PageHeader from '../common/PageHeader';
 import {browserHistory} from 'react-router';
 import {coursesArraySelector} from '../../selectors/courseSelectors';
 import {locationsSelector} from '../../selectors/locationSelectors';
+import {holesArraySelector} from '../../selectors/holeSelector';
 import Button from '../common/Button';
 
 class CoursesPage extends React.Component {

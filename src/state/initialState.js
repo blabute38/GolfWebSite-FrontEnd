@@ -1,6 +1,7 @@
 export default {
   entities : {
     courses: {},
-    locations: {}
+    locations: {},
+    holes: {}
   }
 };

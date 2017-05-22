@@ -17,36 +17,130 @@ const courses = [
       country: "Canada"
     },
     par: "69",
-    numOfHoles: "18"
-  }, {
-    id: "rochester",
-    name: "Rochester",
-    websiteHref: "http://www.rochesterplace.com/",
-    location: {
-      id: 2,
-      address: "981 County Road 2",
-      city: "Belle River",
-      province: "ON",
-      postalCode: "N0R 1A0",
-      country: "Canada"
+    numOfHoles: "18",
+    holes: [
+        {
+          id: "hole1",
+          number: 1,
+          par: 4
+        },
+        {
+          id: "hole2",
+          number: 2,
+          par: 4
+        },
+        {
+          id: "hole3",
+          number: 3,
+          par: 4
+        },
+        {
+          id: "hole4",
+          number: 4,
+          par: 4
+        },
+        {
+          id: "hole5",
+          number: 5,
+          par: 4
+        },
+        {
+          id: "hole6",
+          number: 6,
+          par: 4
+        },
+        {
+          id: "hole7",
+          number: 7,
+          par: 4
+        },
+        {
+          id: "hole8",
+          number: 8,
+          par: 4
+        },
+        {
+          id: "hole9",
+          number: 9,
+          par: 4
+        },
+        {
+          id: "hole10",
+          number: 10,
+          par: 4
+        },
+        {
+          id: "hole11",
+          number: 11,
+          par: 4
+        },
+        {
+          id: "hole12",
+          number: 12,
+          par: 4
+        },
+        {
+          id: "hole13",
+          number: 13,
+          par: 4
+        },
+        {
+          id: "hole14",
+          number: 14,
+          par: 4
+        },
+        {
+          id: "hole15",
+          number: 15,
+          par: 4
+        },
+        {
+          id: "hole16",
+          number: 16,
+          par: 4
+        },
+        {
+          id: "hole17",
+          number: 17,
+          par: 4
+        },
+        {
+          id: "hole18",
+          number: 18,
+          par: 4
+        }
+      ]
     },
-    par: "72",
-    numOfHoles: "18"
-  }, {
-    id: "fox-glen",
-    name: "Fox Glen",
-    websiteHref: "http://www.foxglengolfclub.com/",
-    location: {
-      id: 3,
-      address: "7525 Howard Ave",
-      city: "McGregor",
-      province: "ON",
-      postalCode: "N0R 1J0",
-      country: "Canada"
+    {
+      id: "rochester",
+      name: "Rochester",
+      websiteHref: "http://www.rochesterplace.com/",
+      location: {
+        id: 2,
+        address: "981 County Road 2",
+        city: "Belle River",
+        province: "ON",
+        postalCode: "N0R 1A0",
+        country: "Canada"
+      },
+      par: "72",
+      numOfHoles: "18"
     },
-    par: "70",
-    numOfHoles: "18"
-  }
+    {
+      id: "fox-glen",
+      name: "Fox Glen",
+      websiteHref: "http://www.foxglengolfclub.com/",
+      location: {
+        id: 3,
+        address: "7525 Howard Ave",
+        city: "McGregor",
+        province: "ON",
+        postalCode: "N0R 1J0",
+        country: "Canada"
+      },
+      par: "70",
+      numOfHoles: "18"
+    }
 ];
 
 function replaceAll(str, find, replace) {

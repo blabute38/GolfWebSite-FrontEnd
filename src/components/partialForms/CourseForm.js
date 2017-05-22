@@ -1,9 +1,14 @@
 import React, {PropTypes} from 'react';
 import TextInput from '../common/TextInput';
+import HoleForm from './HoleForm';
 
 const CourseForm = (props) => {
 
   const {course, onSave, onChange, saving, errors} = props;
+  let numOfHoles = 0;
+
+  if (course.holes)
+    numOfHoles = course.holes.length;
 
   return (
     <div>
@@ -17,7 +22,7 @@ const CourseForm = (props) => {
       <TextInput
         name="numOfHoles"
         label="Holes"
-        value={course.numOfHoles || ''}
+        value={numOfHoles}
         onChange={onChange}
         error={errors.numOfHoles}/>
 

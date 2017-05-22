@@ -5,6 +5,10 @@ import {locationFormattedForScreen} from '../../formatters/locationFormatters';
 const CourseListRow = (props) => {
 
   const {course, location} = props;
+  let numOfHoles = 0;
+
+  if (course.holes)
+    numOfHoles = course.holes.length;
 
   return (
     <tr>
@@ -14,7 +18,7 @@ const CourseListRow = (props) => {
       <td>
         <Link to={'/course/' + course.id}>{course.name}</Link>
       </td>
-      <td>{course.numOfHoles}</td>
+      <td>{numOfHoles}</td>
       <td>{course.par}</td>
       <td>{location.address}</td>
     </tr>
@@ -23,7 +27,8 @@ const CourseListRow = (props) => {
 //<td>{locationFormattedForScreen(location)}</td>
 
 CourseListRow.propTypes = {
-  course: PropTypes.object.isRequired
+  course: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 export default CourseListRow;

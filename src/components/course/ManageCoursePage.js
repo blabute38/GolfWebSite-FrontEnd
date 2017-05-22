@@ -3,8 +3,10 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import * as locationActions from '../../actions/locationActions';
+import * as holeActions from '../../actions/holeActions';
 import EditCourseForm from './EditCourseForm';
 import toastr from 'toastr';
+import {holesArraySelectorById} from '../../selectors/holeSelector';
 
 export class ManageCoursePage extends React.Component {
 
@@ -14,21 +16,24 @@ export class ManageCoursePage extends React.Component {
     this.state = {
       course: Object.assign({}, props.course),
       location: Object.assign({}, props.location),
+      holes: Object.assign([], props.holes),
       errors: {},
       saving: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
     this.updateLocationState = this.updateLocationState.bind(this);
+    this.updateHolesState = this.updateHolesState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
   }
 
   componentWillReceiveProps(nextProps, nextState) {
-    debugger;
+
     if (this.props.course.id != nextProps.course.id) {
       // necesary to populate form when existing course is loaded directly
       this.setState({course: Object.assign({}, nextProps.course)});
       this.setState({location: Object.assign({}, nextProps.location)});
+      this.setState({holes: Object.assign([], nextProps.holes)});
     }
   }
 
@@ -48,6 +53,17 @@ export class ManageCoursePage extends React.Component {
     location[field] = event.target.value;
 
     return this.setState({location: location});
+  }
+
+  updateHolesState(event) {
+    const field = event.target.name;
+    // returns array where first item is the field name and the second is the index
+    let fieldAndIndex = field.split("-");
+    let holes = this.state.holes;
+
+    holes[fieldAndIndex[1]][fieldAndIndex[0]] = event.target.value;
+
+    return this.setState({holes: Object.assign([], holes)});
   }
 
   courseFormIsValid() {
@@ -71,18 +87,19 @@ export class ManageCoursePage extends React.Component {
       return;
     }
 
-    // this.setState({saving: true}); this.props.actions.saveCourse(this.state.course).then(() =>
-    // this.props.actions.saveLocation(this.state.location)).then(() => this.redirect()).catch(error =>
-    // {   toastr.error(error);   this.setState({saving: false}); });
-
     this.setState({saving: true});
+    debugger;
+    this.state.holes.map(hole => {
+      debugger;
+      this.props.actions.saveHole(hole);
+    });
     this.props.actions.saveLocation(this.state.location).then((locationId) => {
       this.setState({
         course: {
           ...this.state.course,
           location: locationId
         }
-      })
+      });
       this.props.actions.saveCourse(this.state.course);
     }).then(() => this.redirect()).catch(error => {
       toastr.error(error);
@@ -100,9 +117,11 @@ export class ManageCoursePage extends React.Component {
     return (<EditCourseForm
       onCourseChange={this.updateCourseState}
       onLocationChange={this.updateLocationState}
+      onHolesChange={this.updateHolesState}
       onSave={this.saveCourse}
       course={this.state.course}
       location={this.state.location}
+      holes={this.state.holes}
       errors={this.state.errors}
       saving={this.state.saving}/>);
   }
@@ -111,6 +130,7 @@ export class ManageCoursePage extends React.Component {
 ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  holes: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired
 };
 
@@ -125,13 +145,15 @@ function mapStateToProps(state, ownProps) {
   const {
     entities: {
       courses,
-      locations
+      locations,
+      holes
     }
   } = state;
   const course = courses[courseId] || {};
   const location = locations[course.location] || {};
+  const courseHoles = course.holes ? holesArraySelectorById(holes, course.holes) : [];
 
-  return {course: course, location: location};
+  return {course: course, location: location, holes: courseHoles};
 }
 
 function mapDispatchToProps(dispatch) {
@@ -139,7 +161,8 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
       ...courseActions,
-      ...locationActions
+      ...locationActions,
+      ...holeActions
     }, dispatch)
   };
 }

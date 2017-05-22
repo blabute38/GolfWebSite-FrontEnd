@@ -3,6 +3,7 @@ import courseApi from '../api/mockCourseApi';
 import locationApi from '../api/mockLocationApi';
 import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 import {createLocationSuccess, loadLocationsSuccess, updateLocationSuccess} from './locationActions';
+import {createHoleSuccess, loadHolesSuccess, updateHoleSuccess} from './holeActions';
 import CourseSchema from '../schemas/courseSchema';
 import {normalize} from 'normalizr';
 
@@ -23,18 +24,9 @@ export function loadCourses() {
     dispatch(beginAjaxCall());
     return courseApi.getAllCourses().then(courses => {
       const normalizedData = normalize(courses, CourseSchema);
-
-      return normalizedData;
-      // dispatch(loadCoursesSuccess(normalizedData.entities.courses));
-      // dispatch(loadLocationsSuccess(normalizedData.entities.locations));
-    }).then(normalizedData => {
-      dispatch(loadCoursesSuccess(normalizedData.entities.courses));
-
-      return normalizedData;
-    }).then(normalizedData => {
       dispatch(loadLocationsSuccess(normalizedData.entities.locations));
-
-      return normalizedData;
+      dispatch(loadHolesSuccess(normalizedData.entities.holes));
+      dispatch(loadCoursesSuccess(normalizedData.entities.courses));
     }).catch(error => {});
   };
 }
@@ -45,10 +37,8 @@ export function saveCourse(course) {
     return courseApi.saveCourse(course).then(course => {
       if (course.id) {
         dispatch(updateCourseSuccess(course));
-        // dispatch(updateLocationSuccess(course));
       } else {
         dispatch(createCourseSuccess(course));
-        // dispatch(createLocationSuccess(course));
       }
     }).catch(error => {
       dispatch(ajaxCallError());
